@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+   <title>Home</title>
+   <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+   <link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}">
+</head>
+<body>
+  <br><br><br><br><br><br><br><br><br><br>
+  <form action="#" method=POST>
+    <p>Edit one of the existing databases,</p><br>
+    {%for x in databases%}
+    <input class="btn" type="submit" name="dbselect" value="{{x}}">
+    {%endfor%}
+    <br><br><br><br><br><br>
+    <p>or create a new one:</p>
+    <input type="text" name="dbnew" placeholder="Name of database">
+    <input id="submit" type="submit" value="Submit">
+  </form>
+</body>
+</html>

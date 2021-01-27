@@ -1,0 +1,81 @@
+body{
+  background-color: #21252b;
+}
+form{
+  text-align:center;
+}
+
+p{
+  font-family: "Lucida Console", "Courier New", monospace;
+  color:lightgrey;
+  font-size:25px;
+}
+
+textarea{
+  color:white;
+  font-family: "Lucida Console", "Courier New", monospace;
+  background-color: #282c34;
+  font-size: 19px;
+}
+.btn{
+  padding-right: 3%;
+  padding-left: 3%;
+  height:40px;
+  border-radius: 3px;
+}
+
+.btn:hover{
+  cursor:pointer;
+  color: lightgrey;
+  border-radius: 4px;
+}
+
+#submit{
+  width:80px;
+  margin-left:6px;
+  height:30px;
+  border-radius: 3px;
+}
+
+#submit:hover{
+  cursor:pointer;
+  color: lightgrey;
+  border-radius:3px;
+}
+
+#run{
+ font-size:23px;
+  width:100px;
+  height:45px;
+  background-color: #282c34;
+  color:lightgrey;
+  border-radius: 8px;
+}
+#run:hover{
+  cursor:pointer;
+  background-color: white;
+  color:#282c34;
+  border-radius: 10px;
+}
+
+.alert {
+  text-align: center;
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.alert-error {
+  border-color: orange;
+  background-color: red;
+  color: black;
+}
+
+.alert-info {
+  border-color: orange;
+  background-color: yellow;
+  color: black;
+}

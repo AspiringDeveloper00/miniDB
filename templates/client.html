@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <title>Edit Database Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+  </head>
+  {% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+  <body>
+
+    <br><br><br><br><br><br><br>
+    <form action="/client/{{database}}" method="POST">
+    <p> Write your code for <em>{{database}}</em> here: </p><br>
+    <textarea rows="10" cols="80" name="code" placeholder="Some code"></textarea>
+    <br><br>
+    <input id="run" type="submit" value="Run">
+    </form>
+    <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name=urlParams.getAll('name');
+    const headers=urlParams.getAll('headers');
+    const types=urlParams.getAll('types');
+    for (var i=0;i<types.length;i++){
+      types[i]=types[i].slice(8,-2);
+    }
+    const pk=urlParams.getAll('pk');
+    var tmp=urlParams.getAll('rows');
+    var rows=[];
+    for (i=0;i<tmp.length;i++){
+      tmp[i]=tmp[i].replace(/'/g, '"');
+      rows.push([JSON.parse(tmp[i])]);
+
+    }
+    </script>
+    <br><br>
+    <p style="text-align:center"><script>document.write("Table: "+name[0])</script></p>
+    <br>
+    <div class="table-responsive">
+    <table class="table table-bordered table-hover table-light">
+      <thead>
+        <tr>
+        <script>
+        for (var i=0;i<headers.length;i++){
+          if (pk.includes(headers[i])){
+            document.write("<th scope=\"col\">PK: "+headers[i]+", Type: "+types[i]+"</th>");
+          }else{
+          document.write("<th scope=\"col\">"+headers[i]+", Type: "+types[i]+"</th>");
+        }
+      }
+        </script>
+        </tr>
+      </thead>
+      <tbody>
+
+        <script>
+        for (var i=0;i<rows.length;i++){
+          document.write("<tr>");
+          for (var j=0;j<headers.length;j++){
+            document.write("<td>"+ rows[i][0][j]+"</td>")
+          }
+          document.write("</tr>");
+        }
+        </script>
+      </tbody>
+    </table>
+  </div>
+<br><br>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>
