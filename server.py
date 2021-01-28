@@ -86,7 +86,8 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             #3)For other commands we just run them
             try:
                 if ("select" in query):
-                    query.replace(')','return_object=True)')
+                    query=query.replace(')',',return_object=True)')
+                    print(query)
                     tmp=eval("db"+"."+query)
                     name=tmp._name
                     headers=tmp.column_names
@@ -94,7 +95,7 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
                     pk=tmp.pk_idx
                     rows=tmp.data
                 elif("inner_join" in query):
-                    query.replace(')','return_object=True)',1)
+                    query=query.replace(')',',return_object=True)',1)
                     print(query)
                     tmp=eval("db"+"."+query)
                     name=tmp._name
