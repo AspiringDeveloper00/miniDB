@@ -2,68 +2,68 @@ import sqlparse
 import re
 import numbers
 
-#REGEX
-identifierregex=r'^[a-zA-Z][a-zA-Z0-9]'
-numberregex=r'/^-?\d*\.?\d+$/'
-csvregex=r'.+(\.csv)$'
 
-#IMPORTANT LISTS
-keywords=['alter', 'asc', 'begin', 'by', 'column', 'commit', 'copy', 'create', 'database', 'delete', 'desc', 'drop', 'exclusive', 'export', 'from', 'in', 'index', 'inner', 'insert', 'integer', 'into', 'join', 'load', 'lock', 'mode', 'on', 'order', 'save', 'select', 'set', 'table', 'text', 'to', 'top', 'type', 'update', 'values', 'where', 'work']
-operators=['=','>','<','>=','<=',"<>"]
-selectoptionalkeywords=['top','order by','save']
 
-def isidentifier(string):
-    if (re.match(identifierregex,string)!=None and string.lower() not in keywords and operators):
-        return True
-    else:
-        return False
-def isnumber(number):
-    if (number.isdigit()):
-        return True
-    else:
-        return False
-def iscsv(csv):
-    if (re.match(csvregex,csv)):
-        return True
-    else:
-        return False
-def sql_tokenize(string):
-    """ Tokenizes a SQL statement into tokens.
-
-    Inputs:
-       string: string to tokenize.
-
-    Outputs:
-       a list of tokens.
-    """
-    tokens = []
-    statements = sqlparse.parse(string)
-
-    # SQLparse gives you a list of statements.
-    for statement in statements:
-        # Flatten the tokens in each statement and add to the tokens list.
-        flat_tokens = sqlparse.sql.TokenList(statement.tokens).flatten()
-        for token in flat_tokens:
-            strip_token = str(token).strip()
-            if len(strip_token) > 0:
-                tokens.append(strip_token)
-
-    newtokens = []
-    keep = True
-    for i, token in enumerate(tokens):
-        if token == ".":
-            newtoken = newtokens[-1] + "." + tokens[i + 1]
-            newtokens = newtokens[:-1] + [newtoken]
-            keep = False
-        elif keep:
-            newtokens.append(token)
+def test(query,currentdb):
+    def isidentifier(string):
+        if (re.match(identifierregex,string)!=None and string.lower() not in keywords and operators):
+            return True
         else:
-            keep = True
+            return False
+    def isnumber(number):
+        if (number.isdigit()):
+            return True
+        else:
+            return False
+    def iscsv(csv):
+        if (re.match(csvregex,csv)):
+            return True
+        else:
+            return False
+    def sql_tokenize(string):
+        """ Tokenizes a SQL statement into tokens.
 
-    return newtokens
-def test(query):
+        Inputs:
+           string: string to tokenize.
+
+        Outputs:
+           a list of tokens.
+        """
+        tokens = []
+        statements = sqlparse.parse(string)
+
+        # SQLparse gives you a list of statements.
+        for statement in statements:
+            # Flatten the tokens in each statement and add to the tokens list.
+            flat_tokens = sqlparse.sql.TokenList(statement.tokens).flatten()
+            for token in flat_tokens:
+                strip_token = str(token).strip()
+                if len(strip_token) > 0:
+                    tokens.append(strip_token)
+
+        newtokens = []
+        keep = True
+        for i, token in enumerate(tokens):
+            if token == ".":
+                newtoken = newtokens[-1] + "." + tokens[i + 1]
+                newtokens = newtokens[:-1] + [newtoken]
+                keep = False
+            elif keep:
+                newtokens.append(token)
+            else:
+                keep = True
+
+        return newtokens
+    #REGEX
+    identifierregex=r'^[a-zA-Z][a-zA-Z0-9]'
+    numberregex=r'/^-?\d*\.?\d+$/'
+    csvregex=r'.+(\.csv)$'
+
+    #IMPORTANT LISTS
+    keywords=['alter', 'asc', 'begin', 'by', 'column', 'commit', 'copy', 'create', 'database', 'delete', 'desc', 'drop', 'exclusive', 'export', 'from', 'in', 'index', 'inner', 'insert', 'integer', 'into', 'join', 'load', 'lock', 'mode', 'on', 'order', 'save', 'select', 'set', 'table', 'text', 'to', 'top', 'type', 'update', 'values', 'where', 'work']
+    operators=['=','>','<','>=','<=',"<>"]
+    selectoptionalkeywords=['top','order by','save']
     tokens=sql_tokenize(query)
-
     if tokens[0].lower() in keywords:
         #------------------------------------------CREATE--------------------------------------------#
         if tokens[0].lower()=="create":
@@ -240,7 +240,7 @@ def test(query):
         elif tokens[0].lower()=="save":
             try:
                 if tokens[1].lower()=="database":
-                    if tokens[2].lower()=="currentdb":
+                    if tokens[2].lower()==currentdb:
                         try:
                             tmp=tokens[3]
                         except:
@@ -261,7 +261,7 @@ def test(query):
         elif tokens[0].lower()=="drop":
             try:
                 if tokens[1].lower()=="database":
-                    if tokens[2].lower()=="currentdb":
+                    if tokens[2].lower()==currentdb:
                         try:
                             tmp=tokens[3]
                         except:
@@ -646,9 +646,3 @@ def test(query):
 
 #GET RAW SQL CODE
 raw="SELECT * from dsada;"
-
-#SPLIT IT INTO SMALL QUERIES SEPERATED BY ';'
-queries=sqlparse.split(raw)
-
-for query in queries:
-    print(test(query))

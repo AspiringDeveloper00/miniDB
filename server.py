@@ -2,6 +2,8 @@ from flask import Flask, redirect, url_for, render_template,request, flash
 from database import Database
 import os
 from flask import send_from_directory
+from sqlcompiler import *
+import sqlparse
 
 #This flask api-like application takes the whole miniDB project ,and by server.py,
 #is posting the data from the database to the web (locally) and at the same time the queries affect your local databases.
@@ -71,7 +73,7 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
         #Get the script to the variable data
         data=request.form["code"]
         #Split multiple sql commands by ;
-        data=data.split(";")
+        data=sqlparse.split(data)
         for query in data:
             #For every query remove enter characters if the client changed line
             query=query.replace('\r','')
@@ -85,19 +87,10 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             #
             #3)For other commands we just run them
             try:
-                if ("select" in query):
+                if ("select" or "inner_join" in query):
                     query=query.replace(')',',return_object=True)')
                     print(query)
-                    tmp=eval("db"+"."+query)
-                    name=tmp._name
-                    headers=tmp.column_names
-                    types=tmp.column_types
-                    pk=tmp.pk_idx
-                    rows=tmp.data
-                elif("inner_join" in query):
-                    query=query.replace(')',',return_object=True)',1)
-                    print(query)
-                    tmp=eval("db"+"."+query)
+                    tmp=eval("db"+"."+test(query,database))
                     name=tmp._name
                     headers=tmp.column_names
                     types=tmp.column_types
