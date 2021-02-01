@@ -87,25 +87,42 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             #
             #3)For other commands we just run them
             try:
-                if ("select" or "inner_join" in query):
-                    query=query.replace(')',',return_object=True)')
-                    print(query)
-                    tmp=eval("db"+"."+test(query,database))
-                    name=tmp._name
-                    headers=tmp.column_names
-                    types=tmp.column_types
-                    pk=tmp.pk_idx
-                    rows=tmp.data
-                elif (query=="drop_db()"):
-                    return redirect(url_for("home"))
+                command=test(query,database)
+                if "db." in command:
+                    if ("drop_db()" in command or "save()" in command):
+                        try:
+                            eval(command)
+                            return redirect(url_for("home"))
+                        except:
+                            #If an error was raised print that error
+                            flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column2","error")
+                            return redirect(url_for("client",database=database))
+                    elif ("select" or "inner_join" in command):
+                        try:
+                            tmp=eval(command)
+                            name=tmp._name
+                            headers=tmp.column_names
+                            types=tmp.column_types
+                            pk=tmp.pk_idx
+                            rows=tmp.data
+                        except Exception as e:
+                            #If an error was raised print that error
+                            flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column1","error")
+                            return redirect(url_for("client",database=database))
+                    else:
+                        try:
+                            eval(command)
+                        except:
+                            #If an error was raised print that error
+                            flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column3","error")
+                            return redirect(url_for("client",database=database))
                 else:
-                    eval("db"+"."+query)
-
-            except Exception as e:
-                #If an error was raised print that error
-                flash(str(e),"error")
+                    flash(command,"error")
+                    return redirect(url_for("client",database=database))
+            except:
+                flash("Problem with the sql compiler","error")
                 return redirect(url_for("client",database=database))
-
+    flash("Query success","success")
     return redirect(url_for("client",database=database,name=name,headers=headers,types=types,pk=pk,rows=rows))
 
 if __name__=="__main__":

@@ -79,3 +79,9 @@ textarea{
   background-color: yellow;
   color: black;
 }
+
+.alert-success {
+  border-color: orange;
+  background-color: green;
+  color: black;
+}

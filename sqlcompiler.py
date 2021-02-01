@@ -99,12 +99,12 @@ def test(query,currentdb):
                             try:
                                 tmp=tokens[index]
                             except:
-                                return f"{querybuilder}{columns},{types})"
+                                return f"db.{querybuilder}{columns},{types})"
                             else:
                                 if tmp!=";":
                                     return "You forgot a ';' !"
                                 else:
-                                    return f"{querybuilder}{columns},{types})"
+                                    return f"db.{querybuilder}{columns},{types})"
 
 
                         else:
@@ -119,12 +119,12 @@ def test(query,currentdb):
                                 try:
                                     tmp=tokens[5]
                                 except:
-                                    return f"create_index('{tokens[4]}','Btree','{tokens[2]}')"
+                                    return f"db.create_index('{tokens[4]}','Btree','{tokens[2]}')"
                                 else:
                                     if tmp!=";":
                                         return "You forgot a ';' !"
                                     else:
-                                        return f"create_index('{tokens[4]}','Btree','{tokens[2]}')"
+                                        return f"db.create_index('{tokens[4]}','Btree','{tokens[2]}')"
                             else:
                                 return f"Invalid table name '{tokens[4]}' !"
                         else:
@@ -148,12 +148,12 @@ def test(query,currentdb):
                                     try:
                                         tmp=tokens[7]
                                     except:
-                                        return f"delete('{tokens[2]}','{tokens[4]}{tokens[5]}{tokens[6]}')"
+                                        return f"db.delete('{tokens[2]}','{tokens[4]}{tokens[5]}{tokens[6]}')"
                                     else:
                                         if tmp!=";":
                                             return "You forgot a ';' !"
                                         else:
-                                            return f"delete('{tokens[2]}','{tokens[4]}{tokens[5]}{tokens[6]}')"
+                                            return f"db.delete('{tokens[2]}','{tokens[4]}{tokens[5]}{tokens[6]}')"
                                 else:
                                     return f"Your condition, '{tokens[4:]}' had a wrong format, right format is like '[column name][operator][number or column name]' !"
                             except:
@@ -179,12 +179,12 @@ def test(query,currentdb):
                                         try:
                                             tmp=tokens[10]
                                         except:
-                                            return f"update('{tokens[1]}','{tokens[5]}','{tokens[3]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
+                                            return f"db.update('{tokens[1]}','{tokens[5]}','{tokens[3]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
                                         else:
                                             if tmp!=";":
                                                 return "You forgot a ';' !"
                                             else:
-                                                return f"update('{tokens[1]}','{tokens[5]}','{tokens[3]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
+                                                return f"db.update('{tokens[1]}','{tokens[5]}','{tokens[3]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
                                     else:
                                         return f"Your condition, '{tokens[7:]}' had a wrong format, right format is like '[column name][operator][number or column name]' !"
                                 else:
@@ -213,12 +213,12 @@ def test(query,currentdb):
                                             try:
                                                 tmp=tokens[8]
                                             except:
-                                                return f"cast_column('{tokens[2]}','{tokens[5]}',{tokens[7]})"
+                                                return f"db.cast_column('{tokens[2]}','{tokens[5]}',{tokens[7]})"
                                             else:
                                                 if tmp!=";":
                                                     return "You forgot a ';' !"
                                                 else:
-                                                    return f"cast_column('{tokens[2]}','{tokens[5]}',{tokens[7]})"
+                                                    return f"db.cast_column('{tokens[2]}','{tokens[5]}',{tokens[7]})"
                                         else:
                                             return f"Invalid type '{tokens[7]}', or forgot to declare type str or int or missing keyword TYPE"
                                     except:
@@ -244,12 +244,12 @@ def test(query,currentdb):
                         try:
                             tmp=tokens[3]
                         except:
-                            return "save()"
+                            return "db.save()"
                         else:
                             if tmp!=";":
                                 return "You forgot a ';' !"
                             else:
-                                return "save()"
+                                return "db.save()"
                     else:
                         return "You cannot save another database while you are working with this one"
                 else:
@@ -265,12 +265,12 @@ def test(query,currentdb):
                         try:
                             tmp=tokens[3]
                         except:
-                            return "drop_db()"
+                            return "db.drop_db()"
                         else:
                             if tmp!=";":
                                 return "You forgot a ';' !"
                             else:
-                                return "drop_db()"
+                                return "db.drop_db()"
                     else:
                         return "You cannot drop another database while you are working with this one"
                 elif tokens[1].lower()=="table":
@@ -278,12 +278,12 @@ def test(query,currentdb):
                         try:
                             tmp=tokens[3]
                         except:
-                            return f"drop_table('{tokens[2]}')"
+                            return f"db.drop_table('{tokens[2]}')"
                         else:
                             if tmp!=";":
                                 return "You forgot a ';' !"
                             else:
-                                return f"drop_table('{tokens[2]}')"
+                                return f"db.drop_table('{tokens[2]}')"
                     else:
                         return f"Invalid table name '{tokens[2]}' !"
                 elif tokens[1].lower()=="index":
@@ -291,12 +291,12 @@ def test(query,currentdb):
                             try:
                                 tmp=tokens[3]
                             except:
-                                return f"drop_index('{tokens[2]}')"
+                                return f"db.drop_index('{tokens[2]}')"
                             else:
                                 if tmp!=";":
                                     return "You forgot a ';' !"
                                 else:
-                                    return f"drop_index('{tokens[2]}')"
+                                    return f"db.drop_index('{tokens[2]}')"
                         else:
                             return f"Invalid index name '{tokens[2]}' !"
                 else:
@@ -314,12 +314,12 @@ def test(query,currentdb):
                                 try:
                                     tmp=tokens[5]
                                 except:
-                                    return f"table_to_csv('{tokens[2]}','{tokens[4]}')"
+                                    return f"db.table_to_csv('{tokens[2]}','{tokens[4]}')"
                                 else:
                                     if tmp!=";":
                                         return "You forgot a ';' !"
                                     else:
-                                        return f"table_to_csv('{tokens[2]}','{tokens[4]}')"
+                                        return f"db.table_to_csv('{tokens[2]}','{tokens[4]}')"
                             else:
                                 return f"Invalid csv file name '{tokens[4]}' !"
                         else:
@@ -339,12 +339,12 @@ def test(query,currentdb):
                         try:
                             tmp=tokens[3]
                         except:
-                            return f"lockX_table('{tokens[2]}')"
+                            return f"db.lockX_table('{tokens[2]}')"
                         else:
                             if tmp!=";":
                                 return "You forgot a ';' !"
                             else:
-                                return f"lockX_table('{tokens[2]}')"
+                                return f"db.lockX_table('{tokens[2]}')"
                     else:
                         return f"Invalid table name '{tokens[2]}' !"
                 else:
@@ -359,12 +359,12 @@ def test(query,currentdb):
                         try:
                             tmp=tokens[3]
                         except:
-                            return f"unlock_table('{tokens[2]}')"
+                            return f"db.unlock_table('{tokens[2]}')"
                         else:
                             if tmp!=";":
                                 return "You forgot a ';' !"
                             else:
-                                return f"unlock_table('{tokens[2]}')"
+                                return f"db.unlock_table('{tokens[2]}')"
                     else:
                         return f"Invalid table name '{tokens[2]}' !"
                 else:
@@ -387,12 +387,12 @@ def test(query,currentdb):
                                                 try:
                                                     tmp=tokens[10]
                                                 except:
-                                                    return f"inner_join('{tokens[3]}','{tokens[5]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
+                                                    return f"db.inner_join('{tokens[3]}','{tokens[5]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
                                                 else:
                                                     if tmp!=";":
                                                         return "You forgot a ';' !"
                                                     else:
-                                                        return f"inner_join('{tokens[3]}','{tokens[5]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
+                                                        return f"db.inner_join('{tokens[3]}','{tokens[5]}','{tokens[7]}{tokens[8]}{tokens[9]}')"
                                             else:
                                                 return f"Invalid condition, you wrote '{tokens[7:]}', valid format [column][operator][value]"
                                         except:
@@ -441,7 +441,7 @@ def test(query,currentdb):
                                                                 if tmp!=";" and tmp.lower() not in selectoptionalkeywords:
                                                                     return "You forgot a ';' or spelled incorrect one of the following: [ORDER BY], [TOP], [SAVE]!"
                                                                 elif tmp==";":
-                                                                    return f"inner_join('{tokens[index+1]}',{tokens[index+3]},'{tokens[index+5]}{tokens[index+6]}{tokens[index+7]}',return_object=True)._select_where({cols},'{tokens[index+9]}{tokens[index+10]}{tokens[index+11]}',return_object=True)"
+                                                                    return f"db.inner_join('{tokens[index+1]}',{tokens[index+3]},'{tokens[index+5]}{tokens[index+6]}{tokens[index+7]}',return_object=True)._select_where({cols},'{tokens[index+9]}{tokens[index+10]}{tokens[index+11]}',return_object=True)"
                                                                 else:
                                                                     top='top_k=None'
                                                                     order='order_by=None'
@@ -495,7 +495,7 @@ def test(query,currentdb):
                                                                         except:
                                                                             pass
                                                                     if tokens[-1]==";":
-                                                                        return f"inner_join('{tokens[index+1]}',{tokens[index+3]},'{tokens[index+5]}{tokens[index+6]}{tokens[index+7]}',return_object=True)._select_where({cols},'{tokens[index+9]}{tokens[index+10]}{tokens[index+11]}',{order},{asc},{top},{save},return_object=True)"
+                                                                        return f"db.inner_join('{tokens[index+1]}',{tokens[index+3]},'{tokens[index+5]}{tokens[index+6]}{tokens[index+7]}',return_object=True)._select_where({cols},'{tokens[index+9]}{tokens[index+10]}{tokens[index+11]}',{order},{asc},{top},{save},return_object=True)"
                                                                     else:
                                                                         return "You forgot a ';' !"
 
@@ -550,7 +550,7 @@ def test(query,currentdb):
                             try:
                                 tmp=tokens[index+2]
                             except:
-                                return f"select('{tokens[index+1]}',{cols},return_object=True)"
+                                return f"db.select('{tokens[index+1]}',{cols},return_object=True)"
                             else:
                                 if tmp!=";" and tmp.lower()!="where":
                                     return "You forgot a ';' !"
@@ -560,12 +560,12 @@ def test(query,currentdb):
                                             try:
                                                 tmp=tokens[index+6]
                                             except:
-                                                return f"select('{tokens[index+1]}',{cols},'{tokens[index+3]}{tokens[index+4]}{tokens[index+5]}',return_object=True)"
+                                                return f"db.select('{tokens[index+1]}',{cols},'{tokens[index+3]}{tokens[index+4]}{tokens[index+5]}',return_object=True)"
                                             else:
                                                 if tmp!=";" and tmp.lower() not in selectoptionalkeywords:
                                                     return "You forgot a ';' or spelled incorrect one of the following: [ORDER BY], [TOP], [SAVE]!"
                                                 elif tmp==";":
-                                                    return f"select('{tokens[index+1]}',{cols},'{tokens[index+3]}{tokens[index+4]}{tokens[index+5]}',return_object=True)"
+                                                    return f"db.select('{tokens[index+1]}',{cols},'{tokens[index+3]}{tokens[index+4]}{tokens[index+5]}',return_object=True)"
                                                 else:
                                                     top='top_k=None'
                                                     order='order_by=None'
@@ -619,7 +619,7 @@ def test(query,currentdb):
                                                         except:
                                                             pass
                                                     if tokens[-1]==";":
-                                                        return f"select('{tokens[index+1]}',{cols},'{tokens[index+3]}{tokens[index+4]}{tokens[index+5]}',{order},{asc},{top},{save},return_object=True)"
+                                                        return f"db.select('{tokens[index+1]}',{cols},'{tokens[index+3]}{tokens[index+4]}{tokens[index+5]}',{order},{asc},{top},{save},return_object=True)"
                                                     else:
                                                         return "You forgot a ';' !"
 
@@ -629,7 +629,7 @@ def test(query,currentdb):
                                         return f"Invalid condition '{tokens[index+3:]}' after keyword 'WHERE' !"
 
                                 elif tmp==";":
-                                    return f"select('{tokens[index+1]}','*',return_object=True)"
+                                    return f"db.select('{tokens[index+1]}','*',return_object=True)"
                         else:
                             return f"Invalid table name '{tokens[index+1]}' !"
                     else:
