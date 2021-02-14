@@ -60,8 +60,8 @@ def test(query,currentdb):
     csvregex=r'.+(\.csv)$'
 
     #IMPORTANT LISTS
-    keywords=['alter', 'asc', 'begin', 'by', 'column', 'commit', 'copy', 'create', 'database', 'delete', 'desc', 'drop', 'exclusive', 'export', 'from', 'in', 'index', 'inner', 'insert', 'integer', 'into', 'join', 'load', 'lock', 'mode', 'on', 'order', 'save', 'select', 'set', 'table', 'text', 'to', 'top', 'type', 'update', 'values', 'where', 'work']
-    operators=['=','>','<','>=','<=',"<>"]
+    keywords=['alter', 'asc', 'begin', 'by', 'column', 'commit', 'copy', 'create', 'database', 'delete', 'desc', 'drop', 'unlock','lock','exclusive', 'export', 'from', 'in', 'index', 'inner', 'insert', 'integer', 'into', 'join', 'load', 'lock', 'mode', 'on', 'order', 'save', 'select', 'set', 'table', 'text', 'to', 'top', 'type', 'update', 'values', 'where', 'work']
+    operators=['==','>','<','>=','<=',"<>"]
     selectoptionalkeywords=['top','order by','save']
     tokens=sql_tokenize(query)
     if tokens[0].lower() in keywords:
@@ -173,9 +173,9 @@ def test(query,currentdb):
                 if  (isidentifier(tokens[1])):
                     if (tokens[2].lower()=="set"):
                         try:
-                            if (isidentifier(tokens[3]) and tokens[4]=="=" and (isnumber(tokens[5]) or isidentifier(tokens[5]))):
+                            if (isidentifier(tokens[3]) and tokens[4]=="==" and (isnumber(tokens[5]) or isidentifier(tokens[5]))):
                                 if  (tokens[6].lower()=="where"):
-                                    if (isidentifier(tokens[7]) and tokens[8] in operators and (isnumber(tokens[9]) or isidentifier(tokens[9]))):
+                                    if (isidentifier(tokens[7]) and tokens[8]=="==" and (isnumber(tokens[9]) or isidentifier(tokens[9]))):
                                         try:
                                             tmp=tokens[10]
                                         except:
@@ -199,6 +199,48 @@ def test(query,currentdb):
                     return f"Invalid table name '{tokens[1]}' !"
             except:
                 return f"'{query}' alone is not an sql command, valid format: UPDATE table SET column=value WHERE condition."
+#--------------------------------------------------------------------------------INSERT---------------------------------------------------------------------------#
+        elif tokens[0].lower()=="insert":
+            try:
+                if tokens[1].lower()=="into":
+                    if isidentifier(tokens[2]):
+                        if tokens[3].lower()=="values":
+                            if tokens[4]=="(":
+                                querybuilder=f"insert('{tokens[2]}',"
+                                i=5
+                                columns=[]
+                                types=[]
+                                commas=0
+                                while tokens[i]!=")":
+                                    if i%2==1:
+                                        columns.append(tokens[i])
+                                    elif i%2==0:
+                                        if (tokens[i]==","):
+                                            commas+=1
+                                        else:
+                                            return "Your forgot a comma!"
+                                    if tokens[i+1]==")" and len(columns)==commas+1:
+                                        index=i+2
+                                    i+=1
+                                try:
+                                    tmp=tokens[index]
+                                except:
+                                    return f"db.{querybuilder}{columns})"
+                                else:
+                                    if tmp!=";":
+                                        return "You forgot a ';' !"
+                                    else:
+                                        return f"db.{querybuilder}{columns})"
+                            else:
+                                return f"Did you mean '(' or did you forget a '(', because valid format is (value1,value2...) !"
+                        else:
+                            return f"Invalid keyword '{tokens[3]}', did you mean 'VALUES'?"
+                    else:
+                        return f"Invalid table name '{tokens[2]}' !"
+                else:
+                    return f"Invalid keyword '{tokens[1]}', did you mean 'INTO'?"
+            except:
+                return f"'{query}' alone is not an sql command, valid format: INSERT INTO table VALUES (row), where row=value1,value2,values3... ."
 
         #----------------------------------------------------ALTER-----------------------------------------------------------#
         elif tokens[0].lower()=="alter":

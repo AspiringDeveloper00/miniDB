@@ -4,7 +4,7 @@ import os
 from flask import send_from_directory
 from sqlcompiler import *
 import sqlparse
-
+import subprocess
 #This flask api-like application takes the whole miniDB project ,and by server.py,
 #is posting the data from the database to the web (locally) and at the same time the queries affect your local databases.
 #
@@ -88,36 +88,30 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             #3)For other commands we just run them
             try:
                 command=test(query,database)
+                print(command)
                 if "db." in command:
-                    if ("drop_db()" in command or "save()" in command):
-                        try:
-                            eval(command)
-                            return redirect(url_for("home"))
-                        except:
-                            #If an error was raised print that error
-                            flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column2","error")
-                            return redirect(url_for("client",database=database))
-                    elif ("select" or "inner_join" in command):
-                        try:
-                            tmp=eval(command)
-                            name=tmp._name
-                            headers=tmp.column_names
-                            types=tmp.column_types
-                            pk=tmp.pk_idx
-                            rows=tmp.data
-                        except Exception as e:
-                            #If an error was raised print that error
-                            flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column1","error")
-                            return redirect(url_for("client",database=database))
+                    try:
+                        tmp=eval(command)
+                    except:
+                        flash("xxx","error")
+                        return redirect(url_for("client",database=database))
                     else:
-                        try:
-                            eval(command)
-                        except:
-                            #If an error was raised print that error
-                            flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column3","error")
-                            return redirect(url_for("client",database=database))
+                        if type(tmp).__name__=="NoneType":
+                            if ("drop_db()" in command or "save()" in command):
+                                return redirect(url_for("home"))
+                        elif type(tmp).__name__=="Table":
+                            try:
+                                name=tmp._name
+                                headers=tmp.column_names
+                                types=tmp.column_types
+                                pk=tmp.pk_idx
+                                rows=tmp.data
+                            except Exception as e:
+                                #If an error was raised print that error
+                                flash("Something wrong with "+str(e)+" please check your database, maybe you had an incorrect spelling of a table or column1","error")
+                                return redirect(url_for("client",database=database))
                 else:
-                    flash(command,"error")
+                    flash("Syntax error: "+command,"error")
                     return redirect(url_for("client",database=database))
             except:
                 flash("Problem with the sql compiler","error")

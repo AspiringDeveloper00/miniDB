@@ -35,7 +35,10 @@
     var rows=[];
     for (i=0;i<tmp.length;i++){
       tmp[i]=tmp[i].replace(/'/g, '"');
-      rows.push([JSON.parse(tmp[i])]);
+      if (!tmp[i].includes("None")){
+        rows.push([JSON.parse(tmp[i])]);
+      }
+
 
     }
     </script>
