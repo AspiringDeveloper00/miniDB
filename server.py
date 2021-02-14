@@ -5,6 +5,7 @@ from flask import send_from_directory
 from sqlcompiler import *
 import sqlparse
 import subprocess
+import os
 #This flask api-like application takes the whole miniDB project ,and by server.py,
 #is posting the data from the database to the web (locally) and at the same time the queries affect your local databases.
 #
@@ -88,12 +89,11 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             #3)For other commands we just run them
             try:
                 command=test(query,database)
-                print(command)
                 if "db." in command:
                     try:
                         tmp=eval(command)
                     except:
-                        flash("xxx","error")
+                        flash("","error")
                         return redirect(url_for("client",database=database))
                     else:
                         if type(tmp).__name__=="NoneType":
