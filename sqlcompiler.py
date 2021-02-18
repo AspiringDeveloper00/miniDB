@@ -686,5 +686,3 @@ def test(query,currentdb):
     else:
         return f"Queries must start with a keyword, not '{tokens[0]}' !"
 
-#GET RAW SQL CODE
-raw="SELECT * from dsada;"
