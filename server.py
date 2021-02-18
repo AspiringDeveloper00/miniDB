@@ -6,6 +6,8 @@ from sqlcompiler import *
 import sqlparse
 import subprocess
 import os
+import sys, io
+
 #This flask api-like application takes the whole miniDB project ,and by server.py,
 #is posting the data from the database to the web (locally) and at the same time the queries affect your local databases.
 #
@@ -91,9 +93,21 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
                 command=test(query,database)
                 if "db." in command:
                     try:
+                        stdout = sys.stdout
+                        sys.stdout = io.StringIO()
                         tmp=eval(command)
+                        output = sys.stdout.getvalue()
+                        sys.stdout = stdout
+                        if output=="":
+                            flash("Query success","success")
+                        else:
+                            flash(output,"error")
                     except:
-                        flash("","error")
+                        flash("Invalid table name or column name!","error")
+                        for i,j,y in os.walk("dbdata/"+database+"_db"):
+                            for p in y:
+                                if "meta" not in p.strip(".pkl"):
+                                    eval("db.unlock_table(\""+p.strip(".pkl")+"\")")
                         return redirect(url_for("client",database=database))
                     else:
                         if type(tmp).__name__=="NoneType":
@@ -116,7 +130,6 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             except:
                 flash("Problem with the sql compiler","error")
                 return redirect(url_for("client",database=database))
-    flash("Query success","success")
     return redirect(url_for("client",database=database,name=name,headers=headers,types=types,pk=pk,rows=rows))
 
 if __name__=="__main__":
