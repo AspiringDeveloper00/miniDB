@@ -81,14 +81,7 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
             #For every query remove enter characters if the client changed line
             query=query.replace('\r','')
             query=query.replace('\n','')
-            #At this point an sql compiler can be placed here
-            #At our assignment, we just did the following:
-            #1)If we have a select or inner join query (that we need to return a table) we add the miniDB command "return_object=True" at the appropriate location
-            #so we can get an object from the db.query command and not a command line result
-            #
-            #2)If the query was drop database we redirect the client to the home Page
-            #
-            #3)For other commands we just run them
+            #Full sql--->miniDB compiler with appropriate messages for errors and syntax mistakes
             try:
                 command=test(query,database)
                 if "db." in command:
@@ -104,6 +97,7 @@ def client(database,name=None,headers=None,types=None,pk=None,rows=None):
                             flash(output,"error")
                     except:
                         flash("Invalid table name or column name!","error")
+                        #Unlocking all tables when an error is occured because of a minidb bug, later this will be deleted.
                         for i,j,y in os.walk("dbdata/"+database+"_db"):
                             for p in y:
                                 if "meta" not in p.strip(".pkl"):
